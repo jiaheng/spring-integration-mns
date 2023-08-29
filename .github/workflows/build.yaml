@@ -1,0 +1,27 @@
+name: Main Build
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'liberica'
+          java-version: '8'
+          cache: 'maven'
+
+      - name: Run Maven build
+        run: ./mvnw --batch-mode clean deploy
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
